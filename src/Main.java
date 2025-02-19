@@ -39,16 +39,18 @@ public class Main {
             }
         }
 
-        System.out.println(betSpread);
-
         Shoe shoe = new Shoe(decks, TABLE_MIN, TABLE_MAX, BANKROLL, betSpread);
 
-        System.out.println(shoe.getTc());
-        for (int i = 0; i < 10; i++)
-        {
-            System.out.println(shoe.draw());
-            System.out.println(shoe.getTc());
-        }
-        System.out.println(shoe.toString());
+        shoe.setTc(2);
+
+        System.out.println(shoe.getBet());
+
+//        System.out.println(shoe.getTc());
+//        for (int i = 0; i < 10; i++)
+//        {
+//            System.out.println(shoe.draw());
+//            System.out.println(shoe.getTc());
+//        }
+//        System.out.println(shoe.toString());
     }
 }

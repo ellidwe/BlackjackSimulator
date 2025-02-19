@@ -103,6 +103,11 @@ public class Shoe {
         return shoe.size();
     }
 
+    public void setTc(double tc)
+    { //test method
+        this.tc = tc;
+    }
+
     public double getTc() {
         return tc;
     }
