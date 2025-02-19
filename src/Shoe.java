@@ -8,8 +8,9 @@ public class Shoe {
     private int tableMin;
     private int tableMax;
     private int bankroll;
+    private ArrayList<Integer> betSpread;
 
-    public Shoe(int decksInShoe, int tableMin, int tableMax, int bankroll)
+    public Shoe(int decksInShoe, int tableMin, int tableMax, int bankroll, ArrayList<Integer> betSpread)
     {
         for (int i = 0; i < (4 * decksInShoe); i++) //populate shoe
         {
@@ -30,6 +31,7 @@ public class Shoe {
         this.tableMin = tableMin;
         this.tableMax = tableMax;
         this.bankroll = bankroll;
+        this.betSpread = betSpread;
     }
 
     public String draw()
@@ -52,28 +54,48 @@ public class Shoe {
         return card;
     }
 
-    public void round()
+    public int getBet()
     {
         int bet;
-        boolean win;
 
-        if (tc >= 2)
+        if (Math.round(tc) < 1) //if bad count
         {
-            bet = tableMax;
+            if (betSpread.getFirst() == 13914)
+            {
+                bet = tableMin;
+            }
+            else
+            {
+                bet = betSpread.getFirst();
+            }
+        }
+        else if(Math.round(tc) > betSpread.size()) //if count is above where table max would be put out
+        {
+            if (betSpread.getLast() == 13124)
+            {
+                bet = tableMax;
+            }
+            else
+            {
+                bet = betSpread.getLast();
+            }
         }
         else
         {
-            bet = tableMin;
+            if (betSpread.get((int) Math.round(tc)) == 13124)
+            {
+                bet = tableMax;
+            }
+            else if (betSpread.get((int) Math.round(tc)) == 13914)
+            {
+                bet = tableMin;
+            }
+            else
+            {
+                bet = betSpread.get((int) Math.round(tc));
+            }
         }
-
-        if (win)
-        {
-            bankroll += bet;
-        }
-        else
-        {
-            bankroll -= bet;
-        }
+        return bet;
     }
 
     public int getShoeRemaining()

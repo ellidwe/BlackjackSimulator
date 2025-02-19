@@ -20,7 +20,28 @@ public class Main {
         System.out.print("Bankroll: ");
         final int BANKROLL = Integer.parseInt(s.nextLine());
 
-        Shoe shoe = new Shoe(decks, TABLE_MIN, TABLE_MAX, BANKROLL);
+        System.out.print("Bet Spread: (index 0 is lowest bet, each index following 0 corresponds to tc, at whichever count maxbet should be placed type \"maxbet\", if minbet should be placed, type \"minbet\", separate w commas) ");
+        String[] betSpreadStr = s.nextLine().split(",");
+        ArrayList<Integer> betSpread = new ArrayList<Integer>();
+        for(String string : betSpreadStr)
+        {
+            if (string.equalsIgnoreCase("maxbet"))
+            {
+                betSpread.add(13124);
+            }
+            else if (string.equalsIgnoreCase("minbet"))
+            {
+                betSpread.add(13914);
+            }
+            else
+            {
+                betSpread.add(Integer.parseInt(string));
+            }
+        }
+
+        System.out.println(betSpread);
+
+        Shoe shoe = new Shoe(decks, TABLE_MIN, TABLE_MAX, BANKROLL, betSpread);
 
         System.out.println(shoe.getTc());
         for (int i = 0; i < 10; i++)
