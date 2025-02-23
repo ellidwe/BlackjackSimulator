@@ -8,9 +8,9 @@ public class Shoe {
     private int tableMin;
     private int tableMax;
     private int bankroll;
-    private ArrayList<Integer> betSpread;
+    private final ArrayList<Integer> betSpread;
     private boolean surrender;
-    String[][] strategyTable2 = {
+    final String[][] STRATEGY_TABLE = {
             /* Dealer Upcard:
               2,    3,    4,    5,    6,    7,    8,    9,    10,   A
              */
@@ -36,7 +36,7 @@ public class Shoe {
             {"SS", "SS", "SS+3DS", "SS+1DS", "DS-0SS", "SS", "SS", "SS", "SS", "SS"}, // A,8+
     };
 
-    String[][] splittableStrategyTable2 = {
+    final String[][] SPLITTABLE_STRATEGY_TABLE = {
             /* Dealer Upcard:
               2,    3,    4,    5,    6,    7,    8,    9,    10,   A
              */
