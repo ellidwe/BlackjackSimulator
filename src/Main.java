@@ -11,6 +11,9 @@ public class Main {
         int decks = Integer.parseInt(s.nextLine());
         final int PLAYED_CARDS = (52 * decks) / 4;
 
+        System.out.print ("Late surrender?");
+        final boolean SURRENDER = s.nextLine().equalsIgnoreCase("y");
+
         System.out.print("Table Min: ");
         final int TABLE_MIN = Integer.parseInt(s.nextLine());
 
@@ -41,16 +44,70 @@ public class Main {
 
         Shoe shoe = new Shoe(decks, TABLE_MIN, TABLE_MAX, BANKROLL, betSpread);
 
-        shoe.setTc(2);
+        //setting game conditions^^
 
-        System.out.println(shoe.getBet());
+        ArrayList<String> hand = new ArrayList<>();
+//        for (int i = 0; i < 23; i++)
+//        {
+//            hand.add("A");
+//        }
+//        hand.add("10");
+//        hand.add("10");
+//        hand.add("10");
+//        hand.add("5");
+//        System.out.println(shoe.getHandTotal(hand));
+
+//        shoe.setTc(2);
+//
+//        System.out.println(shoe.getBet());
 
 //        System.out.println(shoe.getTc());
 //        for (int i = 0; i < 10; i++)
 //        {
-//            System.out.println(shoe.draw());
+//            System.out.println(shoe.drawFromShoe());
 //            System.out.println(shoe.getTc());
 //        }
 //        System.out.println(shoe.toString());
+
+//
+//        //Test code to make sure strategy arrays are identical
+
+//        for(int i=0; i<splittableStrategyTable.length; i++) {
+//            for(int j=0; j<splittableStrategyTable[i].length; j++) {
+//                switch (splittableStrategyTable[i][j])
+//                {
+//                    case "H":
+//                        if (!splittableStrategyTable2[i][j].equals("HH"))
+//                        {
+//                            System.out.println("i: " + i + " j: " + j);
+//                        }
+//                        break;
+//                    case "S":
+//                        if (!splittableStrategyTable2[i][j].equals("SS"))
+//                        {
+//                            System.out.println("i: " + i + " j: " + j);
+//                        }
+//                        break;
+//                    case "P":
+//                        if (!splittableStrategyTable2[i][j].equals("PP"))
+//                        {
+//                            System.out.println("i: " + i + " j: " + j);
+//                        }
+//                        break;
+//                    case "DH":
+//                        if (!splittableStrategyTable2[i][j].equals("DH"))
+//                        {
+//                            System.out.println("i: " + i + " j: " + j);
+//                        }
+//                        break;
+//                    case "DS":
+//                        if (!splittableStrategyTable2[i][j].equals("DS"))
+//                        {
+//                            System.out.println("i: " + i + " j: " + j);
+//                        }
+//                        break;
+//                }
+//            }
+//        }
     }
 }
