@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -11,7 +12,7 @@ public class Main {
         int decks = Integer.parseInt(s.nextLine());
         final int PLAYED_CARDS = (52 * decks) / 4;
 
-        System.out.print ("Late surrender?");
+        System.out.print ("Late surrender? ");
         final boolean SURRENDER = s.nextLine().equalsIgnoreCase("y");
 
         System.out.print("Table Min: ");
@@ -46,7 +47,21 @@ public class Main {
 
         //setting game conditions^^
 
-        ArrayList<String> hand = new ArrayList<>();
+        ArrayList<String> h = new ArrayList<>();
+        h.add("2");
+        h.add("2");
+        Hand hand = new Hand(h);
+        System.out.println(hand.getHandTotal());
+        System.out.println(hand.canBeSplit());
+
+        ArrayList<String> dh = new ArrayList<>();
+        dh.add("A");
+        dh.add("A");
+        Hand dealerHand = new Hand(dh);
+
+        System.out.println(shoe.getNextAction(hand, dealerHand));
+
+
 //        for (int i = 0; i < 23; i++)
 //        {
 //            hand.add("A");

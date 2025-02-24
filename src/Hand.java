@@ -39,7 +39,7 @@ public class Hand
         return handTotal;
     }
 
-    public int getXIndex() //used for dealer's hand to get what column in strategy table corresponds to their upcard
+    public int getYIndex() //used for dealer's hand to get what column in strategy table corresponds to their upcard
     {
         if (hand.getFirst().equals("A"))
         {

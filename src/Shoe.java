@@ -145,7 +145,7 @@ public class Shoe {
         String action;
         if (hand.canBeSplit())
         {
-            action = SPLITTABLE_STRATEGY_TABLE[hand.getXIndex()][(hand.getHandTotal() / 2) - 2];
+            action = SPLITTABLE_STRATEGY_TABLE[(hand.getHandTotal() / 2) - 2][dealerHand.getYIndex()];
 
             if (action.length() > 2) //deviation
             {
