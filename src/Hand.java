@@ -3,6 +3,7 @@ import java.util.ArrayList;
 public class Hand
 {
     private ArrayList<String> hand;
+    private boolean soft = false;
 
     public Hand(ArrayList<String> hand)
     {
@@ -33,6 +34,7 @@ public class Hand
             }
             else
             {
+                soft = true;
                 handTotal -= 10;
             }
         }
@@ -49,6 +51,10 @@ public class Hand
         {
             return Integer.parseInt(hand.getFirst()) - 2;
         }
+    }
+
+    public boolean isSoft() {
+        return soft;
     }
 
     public boolean canBeDoubled()

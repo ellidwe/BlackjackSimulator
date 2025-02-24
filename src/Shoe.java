@@ -10,7 +10,7 @@ public class Shoe {
     private int bankroll;
     private final ArrayList<Integer> betSpread;
     private boolean surrender;
-    final String[][] STRATEGY_TABLE = {
+    final String[][] HARD_STRATEGY_TABLE = {
             /* Dealer Upcard:
               2,    3,    4,    5,    6,    7,    8,    9,    10,   A
              */
@@ -27,13 +27,18 @@ public class Shoe {
             {"SS", "SS", "SS", "SS", "SS", "HH", "HH+4SH", "SH-1HH", "SH", "SH"}, // 16
             {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 17+
             //soft totals
+    };
+
+    final String[][] SOFT_STRATEGY_TABLE =
+            {
             {"HH", "HH", "HH", "DH", "DH", "HH", "HH", "HH", "HH", "HH"}, // A,2
             {"HH", "HH", "HH", "DH", "DH", "HH", "HH", "HH", "HH", "HH"}, // A,3
             {"HH", "HH", "DH", "DH", "DH", "HH", "HH", "HH", "HH", "HH"}, // A,4
             {"HH", "HH", "DH", "DH", "DH", "HH", "HH", "HH", "HH", "HH"}, // A,5
             {"HH+1DH", "DH", "DH", "DH", "DH", "HH", "HH", "HH", "HH", "HH"}, // A,6
             {"DS", "DS", "DS", "DS", "DS", "SS", "SS", "HH", "HH", "HH"}, // A,7
-            {"SS", "SS", "SS+3DS", "SS+1DS", "DS-0SS", "SS", "SS", "SS", "SS", "SS"}, // A,8+
+            {"SS", "SS", "SS+3DS", "SS+1DS", "DS-0SS", "SS", "SS", "SS", "SS", "SS"}, // A,8
+            {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // A,9+
     };
 
     final String[][] SPLITTABLE_STRATEGY_TABLE = {
@@ -165,9 +170,9 @@ public class Shoe {
                 return action;
             }
         }
-        else
+        else if(/*soft totals*/true)
         {
-
+            action = SOFT_STRATEGY_TABLE[hand.getHandTotal() - 13][dealerHand.getYIndex()];
         }
         return "0";
     }
