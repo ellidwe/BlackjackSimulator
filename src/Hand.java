@@ -39,6 +39,28 @@ public class Hand
         return handTotal;
     }
 
+    public int getXIndex() //used for dealer's hand to get what column in strategy table corresponds to their upcard
+    {
+        if (hand.getFirst().equals("A"))
+        {
+            return 9;
+        }
+        else
+        {
+            return Integer.parseInt(hand.getFirst()) - 2;
+        }
+    }
+
+    public boolean canBeDoubled()
+    {
+        return hand.size() == 2;
+    }
+
+    public boolean canBeSplit()
+    {
+        return canBeDoubled() && hand.getFirst().equals(hand.getLast());
+    }
+
     public void drawToHand(String card)
     {
         hand.add(card);

@@ -140,25 +140,45 @@ public class Shoe {
         return bet;
     }
 
+    public String getNextAction(Hand hand, Hand dealerHand)
+    {
+        String action;
+        if (hand.canBeSplit())
+        {
+            action = SPLITTABLE_STRATEGY_TABLE[hand.getXIndex()][(hand.getHandTotal() / 2) - 2];
+
+            if (action.length() > 2) //deviation
+            {
+                String countToDeviate = action.substring(2,4);
+
+                if ((countToDeviate.contains("+") && tc >= Integer.parseInt(countToDeviate.substring(1))) || (countToDeviate.contains("-") && tc <= Integer.parseInt(countToDeviate)))
+                { // if should deviate
+                    return action.substring(4);
+                }
+                else
+                {
+                    return action.substring(0,2);
+                }
+            }
+            else
+            {
+                return action;
+            }
+        }
+        else
+        {
+
+        }
+        return "0";
+    }
+
     public String getHandOutcome(Hand hand, String dealerUpcard)
     {
         if (hand.getHand().size() == 1)
         {
             hand.drawToHand(drawFromShoe());
         }
-        boolean splittable = (hand.getHand().getFirst().equals(hand.getHand().getLast()) && hand.getHand().size() == 2);
 
-        switch (dealerUpcard)
-        {
-            case "A":
-                break;
-            case "10":
-                break;
-            case "9":
-                break;
-            case "8":
-                break;
-        }
         return "0";
     }
 
