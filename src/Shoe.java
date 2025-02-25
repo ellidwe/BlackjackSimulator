@@ -8,6 +8,7 @@ public class Shoe {
     private int tableMin;
     private int tableMax;
     private int bankroll;
+    private int maxSplits;
     private final ArrayList<Integer> betSpread;
     private boolean surrender;
     final String[][] HARD_STRATEGY_TABLE = {
@@ -15,7 +16,10 @@ public class Shoe {
               2,    3,    4,    5,    6,    7,    8,    9,    10,   A
              */
             //hard totals
-            {"HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH"}, // 7-
+            {"HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH"}, // 4
+            {"HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH"}, // 5
+            {"HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH"}, // 6
+            {"HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH", "HH"}, // 7
             {"HH", "HH", "HH", "HH", "HH+2DH", "HH", "HH", "HH", "HH", "HH"}, // 8
             {"HH+1DH", "DH", "DH", "DH", "DH", "HH+3DH", "HH", "HH", "HH", "HH"}, // 9
             {"DH", "DH", "DH", "DH", "DH", "DH", "DH", "DH", "HH+4DH", "HH+3DH"}, // 10
@@ -25,8 +29,11 @@ public class Shoe {
             {"SS", "SS", "SS", "SS", "SS", "HH", "HH", "HH", "HH", "HH"}, // 14
             {"SS", "SS", "SS", "SS", "SS", "HH", "HH", "HH+2SH", "SH-0HH", "HH-1SH"}, // 15
             {"SS", "SS", "SS", "SS", "SS", "HH", "HH+4SH", "SH-1HH", "SH", "SH"}, // 16
-            {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 17+
-            //soft totals
+            {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 17
+            {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 18
+            {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 19
+            {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 20
+            {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 21
     };
 
     final String[][] SOFT_STRATEGY_TABLE =
@@ -38,7 +45,7 @@ public class Shoe {
             {"HH+1DH", "DH", "DH", "DH", "DH", "HH", "HH", "HH", "HH", "HH"}, // A,6
             {"DS", "DS", "DS", "DS", "DS", "SS", "SS", "HH", "HH", "HH"}, // A,7
             {"SS", "SS", "SS+3DS", "SS+1DS", "DS-0SS", "SS", "SS", "SS", "SS", "SS"}, // A,8
-            {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // A,9+
+            {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // A,9
     };
 
     final String[][] SPLITTABLE_STRATEGY_TABLE = {
@@ -57,7 +64,7 @@ public class Shoe {
             {"PP", "PP", "PP", "PP", "PP", "PP", "PP", "PP", "PP", "HH"}  // A,A
     };
 
-    public Shoe(int decksInShoe, int tableMin, int tableMax, int bankroll, ArrayList<Integer> betSpread)
+    public Shoe(int decksInShoe, int maxSplits, int tableMin, int tableMax, int bankroll, ArrayList<Integer> betSpread)
     {
         for (int i = 0; i < (4 * decksInShoe); i++) //populate shoe
         {
@@ -79,6 +86,7 @@ public class Shoe {
         this.tableMax = tableMax;
         this.bankroll = bankroll;
         this.betSpread = betSpread;
+        this.maxSplits = maxSplits;
     }
 
     public String drawFromShoe()
@@ -87,94 +95,36 @@ public class Shoe {
         String card = shoe.get(drawIdx);
         shoe.remove(drawIdx);
 
-        if (card.equals("2") || card.equals("3") || card.equals("4") || card.equals("5") || card.equals("6"))
-        {
-            rc++;
-        }
-        else if (card.equals("10") || card.equals("A"))
-        {
-            rc--;
-        }
-
-        tc = rc / (getShoeRemaining() / 52.0);
+        adjustTcRc(card);
 
         return card;
     }
 
-    public int getBet()
+    public String getNextAction(Hand hand, Hand dealerHand, int numSplits)
     {
-        int bet;
-
-        if (Math.round(tc) < 1) //if bad count
+        String action;
+        if (hand.isBlackjack())
         {
-            if (betSpread.getFirst() == 13914)
-            {
-                bet = tableMin;
-            }
-            else
-            {
-                bet = betSpread.getFirst();
-            }
+            return "BJ";
         }
-        else if(Math.round(tc) > betSpread.size()) //if count is above where table max would be put out
+        else if (hand.canBeSplit() && numSplits < maxSplits)
         {
-            if (betSpread.getLast() == 13124)
-            {
-                bet = tableMax;
-            }
-            else
-            {
-                bet = betSpread.getLast();
-            }
+            action = SPLITTABLE_STRATEGY_TABLE[(hand.getRawTotal() / 2) - 2][dealerHand.getYIndex()];
+
+            return Shoe.handleDeviations(tc, rc, action);
+        }
+        else if(hand.isSoft())
+        {
+            action = SOFT_STRATEGY_TABLE[hand.getHandTotal() - 13][dealerHand.getYIndex()];
+
+            return Shoe.handleDeviations(tc, rc, action);
         }
         else
         {
-            if (betSpread.get((int) Math.round(tc)) == 13124)
-            {
-                bet = tableMax;
-            }
-            else if (betSpread.get((int) Math.round(tc)) == 13914)
-            {
-                bet = tableMin;
-            }
-            else
-            {
-                bet = betSpread.get((int) Math.round(tc));
-            }
-        }
-        return bet;
-    }
+            action = HARD_STRATEGY_TABLE[hand.getHandTotal() - 4][dealerHand.getYIndex()];
 
-    public String getNextAction(Hand hand, Hand dealerHand)
-    {
-        String action;
-        if (hand.canBeSplit())
-        {
-            action = SPLITTABLE_STRATEGY_TABLE[(hand.getHandTotal() / 2) - 2][dealerHand.getYIndex()];
-
-            if (action.length() > 2) //deviation
-            {
-                String countToDeviate = action.substring(2,4);
-
-                if ((countToDeviate.contains("+") && tc >= Integer.parseInt(countToDeviate.substring(1))) || (countToDeviate.contains("-") && tc <= Integer.parseInt(countToDeviate)))
-                { // if should deviate
-                    return action.substring(4);
-                }
-                else
-                {
-                    return action.substring(0,2);
-                }
-            }
-            else
-            {
-                return action;
-            }
+            return Shoe.handleDeviations(tc, rc, action);
         }
-        else if(/*soft totals*/true)
-        {
-            action = SOFT_STRATEGY_TABLE[hand.getHandTotal() - 13][dealerHand.getYIndex()];
-        }
-        return "0";
     }
 
     public String getHandOutcome(Hand hand, String dealerUpcard)
@@ -185,6 +135,64 @@ public class Shoe {
         }
 
         return "0";
+    }
+
+    public static String getDeviation(String actionWithDeviation)
+    {
+        return actionWithDeviation.substring(4);
+    }
+
+    public static boolean shouldDeviate(double tc, int rc, String actionWithDeviation)
+    {
+        String deviationCountString = actionWithDeviation.substring(2,4);
+
+        if (deviationCountString.contains("+"))
+        {
+            return (tc >= Integer.parseInt(actionWithDeviation.substring(3,4)));
+        }
+        else if (deviationCountString.contains("0"))
+        {
+            return (rc < 0);
+        }
+        else
+        {
+            return tc <= Integer.parseInt(deviationCountString);
+        }
+    }
+
+    public static String handleDeviations(double tc, int rc, String action)
+    {
+        if (action.length() > 2) //deviation
+        {
+            String countToDeviate = action.substring(2,4);
+
+            if (Shoe.shouldDeviate(tc, rc, action))
+            {
+                return Shoe.getDeviation(action);
+            }
+            else
+            {
+                return action.substring(0,2);
+            }
+        }
+        else
+        {
+            return action;
+        }
+    }
+
+    public void adjustTcRc(String cardDrawn)
+    {
+        if (cardDrawn.equals("2") || cardDrawn.equals("3") || cardDrawn.equals("4") || cardDrawn.equals("5") || cardDrawn.equals("6")) // if low card
+        {
+            rc++;
+        }
+        else if (cardDrawn.equals("10") || cardDrawn.equals("A")) // if high card
+        {
+            rc--;
+        }
+
+        tc = rc / (getShoeRemaining() / 52.0);
     }
 
     public int getShoeRemaining()

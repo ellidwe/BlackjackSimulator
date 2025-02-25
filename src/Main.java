@@ -15,6 +15,9 @@ public class Main {
         System.out.print ("Late surrender? ");
         final boolean SURRENDER = s.nextLine().equalsIgnoreCase("y");
 
+        System.out.print("Max Splits: ");
+        final int MAX_SPLITS = Integer.parseInt(s.nextLine());
+
         System.out.print("Table Min: ");
         final int TABLE_MIN = Integer.parseInt(s.nextLine());
 
@@ -43,23 +46,43 @@ public class Main {
             }
         }
 
-        Shoe shoe = new Shoe(decks, TABLE_MIN, TABLE_MAX, BANKROLL, betSpread);
-
+        Shoe shoe = new Shoe(decks, MAX_SPLITS, TABLE_MIN, TABLE_MAX, BANKROLL, betSpread);
         //setting game conditions^^
 
         ArrayList<String> h = new ArrayList<>();
-        h.add("2");
-        h.add("2");
-        Hand hand = new Hand(h);
-        System.out.println(hand.getHandTotal());
-        System.out.println(hand.canBeSplit());
+        h.add("A");
+        h.add("5");
+        Hand testHand = new Hand(h);
 
         ArrayList<String> dh = new ArrayList<>();
-        dh.add("A");
+        dh.add("7"); //upcard
         dh.add("A");
         Hand dealerHand = new Hand(dh);
 
-        System.out.println(shoe.getNextAction(hand, dealerHand));
+        shoe.setTc(0);
+
+        System.out.println(shoe.getNextAction(testHand, dealerHand, 0));
+
+
+//        System.out.println(hand.isBlackjack());
+
+
+
+//        System.out.println(Shoe.shouldDeviate(4, 0, "HH+4DH"));
+//        System.out.println(Shoe.getDeviation("HH+4DH"));
+
+
+
+//        ArrayList<String> h = new ArrayList<>();
+//        h.add("2");
+//        h.add("2");
+//        Hand hand = new Hand(h);
+//        System.out.println(hand.getHandTotal());
+//        System.out.println(hand.canBeSplit());
+//
+
+//
+//        System.out.println(shoe.getNextAction(hand, dealerHand, 0));
 
 
 //        for (int i = 0; i < 23; i++)

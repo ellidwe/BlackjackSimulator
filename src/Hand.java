@@ -3,17 +3,15 @@ import java.util.ArrayList;
 public class Hand
 {
     private ArrayList<String> hand;
-    private boolean soft = false;
 
     public Hand(ArrayList<String> hand)
     {
         this.hand = hand;
     }
 
-    public int getHandTotal()
+    public int getRawTotal()
     {
         int handTotal = 0;
-        int aceCount = 0;
         for (String card : hand)
         {
             if (!card.equals("A"))
@@ -22,23 +20,35 @@ public class Hand
             } else
             {
                 handTotal += 11;
-                aceCount++;
-            }
-        }
-
-        for (int i = 0; i < aceCount; i++)
-        {
-            if (handTotal < 21)
-            {
-                break;
-            }
-            else
-            {
-                soft = true;
-                handTotal -= 10;
             }
         }
         return handTotal;
+    }
+
+    public int getHandTotal()
+    {
+        int aceCount = 0;
+        int trueTotal = getRawTotal();
+
+        for (String card : hand)
+        {
+            if (card.equals("A"))
+            {
+                aceCount++;
+            }
+        }
+        for (int i = 0; i < aceCount; i++)
+        {
+            if (getRawTotal() > 21)
+            {
+                trueTotal -= 10;
+            }
+            else
+            {
+                break;
+            }
+        }
+        return trueTotal;
     }
 
     public int getYIndex() //used for dealer's hand to get what column in strategy table corresponds to their upcard
@@ -53,8 +63,14 @@ public class Hand
         }
     }
 
-    public boolean isSoft() {
-        return soft;
+    public boolean isSoft()
+    {
+        return (hand.contains("A") && getRawTotal() < 21);
+    }
+
+    public boolean isBlackjack()
+    {
+        return (hand.size() == 2 && getRawTotal() == 21);
     }
 
     public boolean canBeDoubled()
