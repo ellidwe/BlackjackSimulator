@@ -89,6 +89,88 @@ public class Shoe {
         this.maxSplits = maxSplits;
     }
 
+    public int runRound(int initialBet)
+    {
+        boolean handOver = false;
+        boolean loss = false;
+        int splits = 0;
+        int bet = initialBet;
+
+        ArrayList<String> handSplitQueue = new ArrayList<>();
+
+        ArrayList<String> ph = new ArrayList<>();
+        Hand playerHand = new Hand(ph);
+
+        ArrayList<String> dh = new ArrayList<>();
+        Hand dealerHand = new Hand(dh);
+
+        String drawnCard;
+
+        for (int i = 0; i < 2; i++) //populate hands
+        {
+            playerHand.drawToHand(drawFromShoe());
+            dealerHand.drawToHand(drawFromShoe());
+        }
+
+        System.out.println(playerHand.getHand());
+        System.out.println(dealerHand.getHand());
+        System.out.println(getNextAction(playerHand, dealerHand, splits));
+
+        while (handSplitQueue.isEmpty())
+        {
+            while (!handOver)
+            {
+                switch (getNextAction(playerHand, dealerHand, splits))
+                {
+                    case "HH":
+                        playerHand.drawToHand(drawFromShoe());
+                        if (playerHand.getHandTotal() > 21)
+                        {
+                            handOver = true;
+                            loss = true;
+                        }
+                        break;
+                    case "SS":
+
+                        break;
+                    case "DH":
+
+                        break;
+                    case "DS":
+
+                        break;
+                    case "PP":
+                        splits += 1;
+                        handSplitQueue.add(playerHand.getHand().get(1)); //adds second card in hand to queue of hands to play
+                        playerHand.getHand().set(1, drawFromShoe()); //adds new card to current hand in place of second card
+                        break;
+                    case "SH":
+
+                        break;
+                }
+            }
+        }
+
+
+        if(true) //win
+        {
+            return bet;
+        }
+        else if(false) //push
+        {
+            return 0;
+        }
+        else //lose
+        {
+            return (-1 * bet);
+        }
+    }
+
+    public int getBet()
+    {
+        return 0;
+    }
+
     public String drawFromShoe()
     {
         int drawIdx = (int) (Math.random() * (shoe.size() + 1));
@@ -125,16 +207,6 @@ public class Shoe {
 
             return Shoe.handleDeviations(tc, rc, action);
         }
-    }
-
-    public String getHandOutcome(Hand hand, String dealerUpcard)
-    {
-        if (hand.getHand().size() == 1)
-        {
-            hand.drawToHand(drawFromShoe());
-        }
-
-        return "0";
     }
 
     public static String getDeviation(String actionWithDeviation)

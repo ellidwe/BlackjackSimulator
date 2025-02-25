@@ -27,7 +27,7 @@ public class Main {
         System.out.print("Bankroll: ");
         final int BANKROLL = Integer.parseInt(s.nextLine());
 
-        System.out.print("Bet Spread: (index 0 is lowest bet, each index following 0 corresponds to tc, at whichever count maxbet should be placed type \"maxbet\", if minbet should be placed, type \"minbet\", separate w commas) ");
+        System.out.print("Bet Spread: (index 0 is bet at tc <= 0, each index following 0 corresponds to tc, at whichever count maxbet should be placed type \"maxbet\", if minbet should be placed, type \"minbet\", separate w commas) ");
         String[] betSpreadStr = s.nextLine().split(",");
         ArrayList<Integer> betSpread = new ArrayList<Integer>();
         for(String string : betSpreadStr)
@@ -59,9 +59,7 @@ public class Main {
         dh.add("A");
         Hand dealerHand = new Hand(dh);
 
-        shoe.setTc(0);
-
-        System.out.println(shoe.getNextAction(testHand, dealerHand, 0));
+        shoe.runRound(1);
 
 
 //        System.out.println(hand.isBlackjack());
