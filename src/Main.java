@@ -27,7 +27,10 @@ public class Main {
         System.out.print("Bankroll: ");
         final int BANKROLL = Integer.parseInt(s.nextLine());
 
-        System.out.print("Bet Spread: (index 0 is bet at tc <= 0, each index following 0 corresponds to tc, at whichever count maxbet should be placed type \"maxbet\", if minbet should be placed, type \"minbet\", separate w commas) ");
+        System.out.print("Deck Penetration (must be a decimal that, when multiplied by the amount of cards in the shoe, results in an integer): ");
+        final double DECK_PENETRATION = Double.parseDouble(s.nextLine());
+
+        System.out.print("Bet Spread (index 0 is bet at tc <= 0, each index following 0 corresponds to tc, at whichever count maxbet should be placed type \"maxbet\", if minbet should be placed, type \"minbet\", separate w commas): ");
         String[] betSpreadStr = s.nextLine().split(",");
         ArrayList<Integer> betSpread = new ArrayList<Integer>();
         for(String string : betSpreadStr)
@@ -46,7 +49,7 @@ public class Main {
             }
         }
 
-        Shoe shoe = new Shoe(decks, MAX_SPLITS, TABLE_MIN, TABLE_MAX, BANKROLL, betSpread);
+        Shoe shoe = new Shoe(decks, MAX_SPLITS, TABLE_MIN, TABLE_MAX, BANKROLL, DECK_PENETRATION, betSpread);
         //setting game conditions^^
 
         ArrayList<String> h = new ArrayList<>();

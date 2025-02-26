@@ -9,8 +9,11 @@ public class Shoe {
     private int tableMax;
     private int bankroll;
     private int maxSplits;
-    private final ArrayList<Integer> betSpread;
+    private int decks;
+    private double deckPen;
+    private ArrayList<Integer> betSpread;
     private boolean surrender;
+    private boolean shuffleFlag = false;
     final String[][] HARD_STRATEGY_TABLE = {
             /* Dealer Upcard:
               2,    3,    4,    5,    6,    7,    8,    9,    10,   A
@@ -64,9 +67,10 @@ public class Shoe {
             {"PP", "PP", "PP", "PP", "PP", "PP", "PP", "PP", "PP", "HH"}  // A,A
     };
 
-    public Shoe(int decksInShoe, int maxSplits, int tableMin, int tableMax, int bankroll, ArrayList<Integer> betSpread)
+    public Shoe(int decksInShoe, int maxSplits, int tableMin, int tableMax, int bankroll, double deckPen, ArrayList<Integer> betSpread)
     {
-        for (int i = 0; i < (4 * decksInShoe); i++) //populate shoe
+        decks = decksInShoe;
+        for (int i = 0; i < (4 * decks); i++) //populate shoe
         {
             shoe.add("A");
             for (int j = 0; j < 4; j++)
@@ -85,16 +89,17 @@ public class Shoe {
         this.tableMin = tableMin;
         this.tableMax = tableMax;
         this.bankroll = bankroll;
+        this.deckPen = deckPen;
         this.betSpread = betSpread;
         this.maxSplits = maxSplits;
     }
 
     public int runRound(int initialBet)
     {
-        boolean handOver = false;
-        boolean loss = false;
+        boolean endAction = false;
         int splits = 0;
         int bet = initialBet;
+        int winnings = 0;
 
         ArrayList<String> handSplitQueue = new ArrayList<>();
 
@@ -116,54 +121,53 @@ public class Shoe {
         System.out.println(dealerHand.getHand());
         System.out.println(getNextAction(playerHand, dealerHand, splits));
 
-        while (handSplitQueue.isEmpty())
+        while (!endAction)
         {
-            while (!handOver)
+            switch (getNextAction(playerHand, dealerHand, splits))
             {
-                switch (getNextAction(playerHand, dealerHand, splits))
-                {
-                    case "HH":
-                        playerHand.drawToHand(drawFromShoe());
-                        if (playerHand.getHandTotal() > 21)
+                case "HH":
+                    playerHand.drawToHand(drawFromShoe());
+
+                    if (playerHand.isBust())
+                    {
+                        winnings -= bet;
+
+                        if (handSplitQueue.isEmpty())
                         {
-                            handOver = true;
-                            loss = true;
+                            endAction = true;
                         }
-                        break;
-                    case "SS":
+                        else
+                        {
+                            playerHand = (getNewHandFromSplitQueue(handSplitQueue, playerHand));
+                        }
+                    }
+                    break;
+                case "SS":
 
-                        break;
-                    case "DH":
+                    break;
+                case "DH":
 
-                        break;
-                    case "DS":
+                    break;
+                case "DS":
 
-                        break;
-                    case "PP":
-                        splits += 1;
-                        handSplitQueue.add(playerHand.getHand().get(1)); //adds second card in hand to queue of hands to play
-                        playerHand.getHand().set(1, drawFromShoe()); //adds new card to current hand in place of second card
-                        break;
-                    case "SH":
+                    break;
+                case "PP":
+                    splits += 1;
+                    handSplitQueue.add(playerHand.getHand().get(1)); //adds second card in hand to queue of hands to play
 
-                        break;
+                    playerHand.drawToHand(drawFromShoe()); //adds new card to current hand in place of second card
+                    break;
+                case "SH":
+
+                    break;
                 }
             }
-        }
+            if (handSplitQueue.isEmpty())
+            {
+                endAction = true;
+            }
 
-
-        if(true) //win
-        {
-            return bet;
-        }
-        else if(false) //push
-        {
-            return 0;
-        }
-        else //lose
-        {
-            return (-1 * bet);
-        }
+        return winnings;
     }
 
     public int getBet()
@@ -178,6 +182,11 @@ public class Shoe {
         shoe.remove(drawIdx);
 
         adjustTcRc(card);
+
+        if(shoe.size() <= (1 - deckPen) * 52 * decks)
+        {
+            shuffleFlag = true;
+        }
 
         return card;
     }
@@ -265,6 +274,22 @@ public class Shoe {
         }
 
         tc = rc / (getShoeRemaining() / 52.0);
+    }
+
+    public Hand getNewHandFromSplitQueue(ArrayList<String> handSplitQueue, Hand playerHand)
+    {
+        playerHand.getHand().set(0, handSplitQueue.getFirst());
+        handSplitQueue.removeFirst();
+
+        playerHand.drawToHand(drawFromShoe());
+
+        return playerHand;
+    }
+
+    public boolean checkForSplitsInQueue(ArrayList<String> handSplitQueue, Hand playerHand)
+    {
+        //if nothing else to split
+        return handSplitQueue.isEmpty();
     }
 
     public int getShoeRemaining()

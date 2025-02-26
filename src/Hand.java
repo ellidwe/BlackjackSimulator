@@ -78,6 +78,11 @@ public class Hand
         return hand.size() == 2;
     }
 
+    public boolean isBust()
+    {
+        return (getHandTotal() > 21);
+    }
+
     public boolean canBeSplit()
     {
         return canBeDoubled() && hand.getFirst().equals(hand.getLast());
