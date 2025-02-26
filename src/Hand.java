@@ -3,10 +3,13 @@ import java.util.ArrayList;
 public class Hand
 {
     private ArrayList<String> hand;
+    private int bet;
+    private boolean surrendered;
 
-    public Hand(ArrayList<String> hand)
+    public Hand(ArrayList<String> hand, int bet)
     {
         this.hand = hand;
+        this.bet = bet;
     }
 
     public int getRawTotal()
@@ -68,9 +71,9 @@ public class Hand
         return (hand.contains("A") && getRawTotal() < 21);
     }
 
-    public boolean isBlackjack()
+    public boolean isBlackjack(int splits)
     {
-        return (hand.size() == 2 && getRawTotal() == 21);
+        return (hand.size() == 2 && getRawTotal() == 21 && splits == 0);
     }
 
     public boolean canBeDoubled()
@@ -96,5 +99,26 @@ public class Hand
     public ArrayList<String> getHand()
     {
         return hand;
+    }
+
+    public int getBet() {
+        return bet;
+    }
+
+    public void setBet(int bet) {
+        this.bet = bet;
+    }
+
+    public boolean isSurrendered() {
+        return surrendered;
+    }
+
+    public void setSurrendered(boolean surrendered) {
+        this.surrendered = surrendered;
+    }
+
+    @Override
+    public String toString() {
+        return hand.toString();
     }
 }

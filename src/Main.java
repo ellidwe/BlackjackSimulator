@@ -55,14 +55,14 @@ public class Main {
         ArrayList<String> h = new ArrayList<>();
         h.add("A");
         h.add("5");
-        Hand testHand = new Hand(h);
+        Hand testHand = new Hand(h, 1);
 
         ArrayList<String> dh = new ArrayList<>();
         dh.add("7"); //upcard
         dh.add("A");
-        Hand dealerHand = new Hand(dh);
+        Hand dealerHand = new Hand(dh, 1);
 
-        shoe.runRound(1);
+        System.out.println(shoe.runRound(1));
 
 
 //        System.out.println(hand.isBlackjack());
