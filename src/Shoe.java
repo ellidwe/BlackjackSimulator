@@ -109,17 +109,11 @@ public class Shoe {
         ArrayList<String> dh = new ArrayList<>();
         Hand dealerHand = new Hand(dh);
 
-        String drawnCard;
-
         for (int i = 0; i < 2; i++) //populate hands
         {
             playerHand.drawToHand(drawFromShoe());
             dealerHand.drawToHand(drawFromShoe());
         }
-
-        System.out.println(playerHand.getHand());
-        System.out.println(dealerHand.getHand());
-        System.out.println(getNextAction(playerHand, dealerHand, splits));
 
         while (!endAction)
         {
@@ -161,10 +155,6 @@ public class Shoe {
 
                     break;
                 }
-            }
-            if (handSplitQueue.isEmpty())
-            {
-                endAction = true;
             }
 
         return winnings;
