@@ -379,9 +379,14 @@ public class Shoe {
 
     public Hand getNewHandFromSplitQueue(ArrayList<String> handSplitQueue, Hand playerHand)
     {
-        playerHand.getHand().set(0, handSplitQueue.getFirst());
+        while (!playerHand.getHand().isEmpty())
+        {
+            playerHand.getHand().removeFirst();
+        }
 
-        playerHand.getHand().set(1, drawFromShoe());
+        playerHand.drawToHand(handSplitQueue.getFirst());
+
+        playerHand.drawToHand(drawFromShoe());
 
         return playerHand;
     }

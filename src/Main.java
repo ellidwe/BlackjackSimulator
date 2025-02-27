@@ -58,7 +58,7 @@ public class Main {
         Hand testHand = new Hand(h, 1);
 
         ArrayList<String> dh = new ArrayList<>();
-        dh.add("7"); //upcard
+        dh.add("7"); //upcard1
         dh.add("A");
         Hand dealerHand = new Hand(dh, 1);
 
