@@ -12,7 +12,6 @@ public class Shoe {
     private int decks;
     private double deckPen;
     private ArrayList<Integer> betSpread;
-    private boolean surrender;
     private boolean shuffleFlag = false;
     final String[][] HARD_STRATEGY_TABLE = {
             /* Dealer Upcard:
@@ -30,8 +29,8 @@ public class Shoe {
             {"HH+3SS", "HH+2SS", "SS-0HH", "SS-2HH", "SS-1HH", "HH", "HH", "HH", "HH", "HH"}, // 12
             {"SS-1HH", "SS-2HH", "SS", "SS", "SS", "HH", "HH", "HH", "HH", "HH"}, // 13
             {"SS", "SS", "SS", "SS", "SS", "HH", "HH", "HH", "HH", "HH"}, // 14
-            {"SS", "SS", "SS", "SS", "SS", "HH", "HH", "HH+2SH", "SH-0HH", "HH-1SH"}, // 15
-            {"SS", "SS", "SS", "SS", "SS", "HH", "HH+4SH", "SH-1HH", "SH+1SS", "SH+3SS"}, // 16
+            {"SS", "SS", "SS", "SS", "SS", "HH", "HH", "HH", "HH", "HH"}, // 15
+            {"SS", "SS", "SS", "SS", "SS", "HH", "HH", "HH+4SS", "HH+1SS", "HH+3SS"}, // 16
             {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 17
             {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 18
             {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 19
@@ -111,8 +110,6 @@ public class Shoe {
 
         System.out.println(dealerHand);
 
-        tc = 10000; //testcode delete
-
         if(dealerHand.getHand().getFirst().equals("A") && tc >= 3)
         {
             System.out.println("ins");
@@ -141,10 +138,6 @@ public class Shoe {
             else if (dealerHand.isBlackjack() && !hand.isBlackjack())
             {
                 winnings -= hand.getBet();
-            }
-            else if (hand.isSurrendered())
-            {
-                winnings -= (hand.getBet() * 0.5);
             }
             else
             {
@@ -199,10 +192,6 @@ public class Shoe {
             playerHand.drawToHand(drawFromShoe());
             dealerHand.drawToHand(drawFromShoe());
         }
-
-        dealerHand.getHand().set(0, "A"); //testcode delete
-        dealerHand.getHand().set(1, "A"); //testcode delete
-
 
         System.out.println(playerHand);
         System.out.println(dealerHand);
@@ -312,40 +301,6 @@ public class Shoe {
 
                     playerHand.getHand().set(1, drawFromShoe()); //adds new card to current hand in place of second card
                     break;
-                case "SH":
-                    if(surrender)
-                    {
-                        playerHand.setBet(bet / 2);
-                        playerHand.setSurrendered(true);
-                        handList.add(copyHand(playerHand));
-                        if (handSplitQueue.isEmpty())
-                        {
-                            endAction = true;
-                        }
-                        else
-                        {
-                            playerHand = (getNewHandFromSplitQueue(handSplitQueue, playerHand));
-                        }
-                    }
-                    else
-                    {
-                        playerHand.drawToHand(drawFromShoe());
-
-                        if (playerHand.isBust())
-                        {
-                            handList.add(copyHand(playerHand));
-
-                            if (handSplitQueue.isEmpty())
-                            {
-                                endAction = true;
-                            }
-                            else
-                            {
-                                playerHand = (getNewHandFromSplitQueue(handSplitQueue, playerHand));
-                            }
-                        }
-                    }
-                    break;
             }
             System.out.println(playerHand);
             System.out.println(playerHand.getHandTotal());
@@ -386,7 +341,51 @@ public class Shoe {
 
     public int getBetForHand()
     {
-        return 1;
+        if(tc < 1)
+        {
+            if(betSpread.getFirst() == 13914)
+            {
+                return tableMin;
+            }
+            else if (betSpread.getFirst() == 13124)
+            {
+                return tableMax;
+            }
+            else
+            {
+                return betSpread.getFirst();
+            }
+        }
+        else if ((int) tc > betSpread.size() - 1)
+        {
+            if(betSpread.getLast() == 13914)
+            {
+                return tableMin;
+            }
+            else if (betSpread.getLast() == 13124)
+            {
+                return tableMax;
+            }
+            else
+            {
+                return betSpread.getLast();
+            }
+        }
+        else
+        {
+            if(betSpread.get((int) tc) == 13914)
+            {
+                return tableMin;
+            }
+            else if (betSpread.get((int) tc) == 13124)
+            {
+                return tableMax;
+            }
+            else
+            {
+                return betSpread.get((int) tc);
+            }
+        }
     }
 
     public String drawFromShoe()

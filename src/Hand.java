@@ -4,7 +4,6 @@ public class Hand
 {
     private ArrayList<String> hand;
     private int bet;
-    private boolean surrendered;
 
     public Hand(ArrayList<String> hand, int bet)
     {
@@ -104,14 +103,6 @@ public class Hand
 
     public void setBet(int bet) {
         this.bet = bet;
-    }
-
-    public boolean isSurrendered() {
-        return surrendered;
-    }
-
-    public void setSurrendered(boolean surrendered) {
-        this.surrendered = surrendered;
     }
 
     @Override
