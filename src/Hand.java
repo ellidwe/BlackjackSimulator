@@ -43,13 +43,9 @@ public class Hand
         }
         for (int i = 0; i < aceCount; i++)
         {
-            if (getRawTotal() > 21)
+            if (trueTotal > 21)
             {
                 trueTotal -= 10;
-            }
-            else
-            {
-                break;
             }
         }
         return trueTotal;

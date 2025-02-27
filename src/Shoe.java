@@ -111,14 +111,19 @@ public class Shoe {
 
         System.out.println(dealerHand);
 
+        tc = 10000; //testcode delete
+
         if(dealerHand.getHand().getFirst().equals("A") && tc >= 3)
         {
+            System.out.println("ins");
             if (dealerHand.isBlackjack())
             {
+                System.out.println("paid");
                 return 0.0;
             }
             else
             {
+                System.out.println("unpaid");
                 winnings -= totalBet * 0.5;
             }
         }
@@ -147,6 +152,7 @@ public class Shoe {
                 {
                     dealerHand.drawToHand(drawFromShoe());
                     System.out.println(dealerHand);
+                    System.out.println(dealerHand.getHandTotal());
                 }
 
                 if (dealerHand.isBust())
@@ -193,6 +199,10 @@ public class Shoe {
             playerHand.drawToHand(drawFromShoe());
             dealerHand.drawToHand(drawFromShoe());
         }
+
+        dealerHand.getHand().set(0, "A"); //testcode delete
+        dealerHand.getHand().set(1, "A"); //testcode delete
+
 
         System.out.println(playerHand);
         System.out.println(dealerHand);
