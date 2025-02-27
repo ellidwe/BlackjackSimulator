@@ -99,12 +99,29 @@ public class Shoe {
         ArrayList<Hand> playerHandList = runRound(getBetForHand());
 
         double winnings = 0;
+        int totalBet = 0;
 
         Hand dealerHand = playerHandList.getLast(); //get dealers hand from list
         playerHandList.removeLast(); //remove dealers hand from hand list
 
+        for(Hand hand: playerHandList)
+        {
+            totalBet += hand.getBet();
+        }
+
         System.out.println(dealerHand);
 
+        if(dealerHand.getHand().getFirst().equals("A") && tc >= 3)
+        {
+            if (dealerHand.isBlackjack())
+            {
+                return 0;
+            }
+            else
+            {
+                winnings -= totalBet * 0.5;
+            }
+        }
 
         for(Hand hand : playerHandList)
         {
