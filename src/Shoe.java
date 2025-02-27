@@ -94,6 +94,64 @@ public class Shoe {
         this.maxSplits = maxSplits;
     }
 
+    public double getRoundResults()
+    {
+        int initialBet = getBet();
+        ArrayList<Hand> playerHandList = runRound(initialBet);
+
+        double winnings = 0;
+
+        Hand dealerHand = playerHandList.getLast(); //get dealers hand from list
+        playerHandList.removeLast(); //remove dealers hand from hand list
+
+        System.out.println(dealerHand);
+
+
+        for(Hand hand : playerHandList)
+        {
+            if(hand.isBust())
+            {
+                winnings -= hand.getBet();
+            }
+            else if (hand.isBlackjack() && !dealerHand.isBlackjack() && playerHandList.size() == 1)
+            {
+                winnings += hand.getBet() * 1.5;
+            }
+            else if (dealerHand.isBlackjack() && !hand.isBlackjack())
+            {
+                winnings -= hand.getBet();
+            }
+            else
+            {
+                while(dealerHand.getHandTotal() < 17 || (dealerHand.getHandTotal() < 18 && dealerHand.isSoft())) //hard 17 or soft or hard 18+
+                {
+                    dealerHand.drawToHand(drawFromShoe());
+                    System.out.println(dealerHand);
+
+                    if (dealerHand.isBust())
+                    {
+                       winnings += hand.getBet();
+                    }
+                    else if (hand.getHandTotal() > dealerHand.getHandTotal())
+                    {
+                        winnings += hand.getBet();
+                    }
+                    else if(hand.getHandTotal() < dealerHand.getHandTotal())
+                    {
+                        winnings -= hand.getBet();
+                    }
+                }
+            }
+        }
+
+        if(shuffleFlag)
+        {
+            shuffleShoe();
+        }
+
+        return winnings;
+    }
+
     public ArrayList<Hand> runRound(int bet)
     {
         boolean endAction = false;
@@ -108,16 +166,13 @@ public class Shoe {
         Hand playerHand = new Hand(ph, bet);
 
         ArrayList<String> dh = new ArrayList<>();
-        Hand dealerHand = new Hand(dh, 0); //bet for this doesn't matter 0 is a placeholder
+        Hand dealerHand = new Hand(dh, 0); //bet for this doesn't matter 0 is a placeholder, dealerhand is always og hand
 
         for (int i = 0; i < 2; i++) //populate hands
         {
             playerHand.drawToHand(drawFromShoe());
             dealerHand.drawToHand(drawFromShoe());
         }
-
-        playerHand.getHand().set(0, "8");
-        playerHand.getHand().set(1, "8"); //delete, testcode
 
         System.out.println(playerHand);
         System.out.println(dealerHand);
@@ -249,6 +304,7 @@ public class Shoe {
                         if (playerHand.isBust())
                         {
                             handList.add(copyHand(playerHand));
+
                             if (handSplitQueue.isEmpty())
                             {
                                 endAction = true;
@@ -260,20 +316,45 @@ public class Shoe {
                         }
                     }
                     break;
-                }
-            System.out.println(playerHand);
             }
-        if(shuffleFlag)
+            System.out.println(playerHand);
+        }
+        handList.add(dealerHand);
+        return handList;
+    }
+
+    public void shuffleShoe()
+    {
+        while (!shoe.isEmpty())
         {
-            //shuffle!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+            shoe.removeFirst();
         }
 
-        return handList;
+        for (int i = 0; i < (4 * decks); i++) //populate shoe
+        {
+            shoe.add("A");
+            for (int j = 0; j < 4; j++)
+            {
+                shoe.add("10");
+            }
+            shoe.add("9");
+            shoe.add("8");
+            shoe.add("7");
+            shoe.add("6");
+            shoe.add("5");
+            shoe.add("4");
+            shoe.add("3");
+            shoe.add("2");
+        }
+
+        rc = 0;
+        tc = 0;
+        shuffleFlag = false;
     }
 
     public int getBet()
     {
-        return 0;
+        return 1;
     }
 
     public String drawFromShoe()
@@ -295,9 +376,9 @@ public class Shoe {
     public String getNextAction(Hand hand, Hand dealerHand, int numSplits)
     {
         String action;
-        if (hand.isBlackjack(numSplits))
+        if (hand.isBlackjack())
         {
-            return "BJ";
+            return "SS";
         }
         else if (hand.canBeSplit() && numSplits < maxSplits)
         {

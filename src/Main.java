@@ -62,7 +62,7 @@ public class Main {
         dh.add("A");
         Hand dealerHand = new Hand(dh, 1);
 
-        System.out.println(shoe.runRound(1));
+        System.out.println(shoe.getRoundResults());
 
 
 //        System.out.println(hand.isBlackjack());

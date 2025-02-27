@@ -71,9 +71,9 @@ public class Hand
         return (hand.contains("A") && getRawTotal() < 21);
     }
 
-    public boolean isBlackjack(int splits)
+    public boolean isBlackjack()
     {
-        return (hand.size() == 2 && getRawTotal() == 21 && splits == 0);
+        return (hand.size() == 2 && getRawTotal() == 21);
     }
 
     public boolean canBeDoubled()
