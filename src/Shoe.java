@@ -115,7 +115,7 @@ public class Shoe {
         {
             if (dealerHand.isBlackjack())
             {
-                return 0;
+                return 0.0;
             }
             else
             {
