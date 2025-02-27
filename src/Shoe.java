@@ -31,7 +31,7 @@ public class Shoe {
             {"SS-1HH", "SS-2HH", "SS", "SS", "SS", "HH", "HH", "HH", "HH", "HH"}, // 13
             {"SS", "SS", "SS", "SS", "SS", "HH", "HH", "HH", "HH", "HH"}, // 14
             {"SS", "SS", "SS", "SS", "SS", "HH", "HH", "HH+2SH", "SH-0HH", "HH-1SH"}, // 15
-            {"SS", "SS", "SS", "SS", "SS", "HH", "HH+4SH", "SH-1HH", "SH", "SH"}, // 16
+            {"SS", "SS", "SS", "SS", "SS", "HH", "HH+4SH", "SH-1HH", "SH+1SS", "SH+3SS"}, // 16
             {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 17
             {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 18
             {"SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS", "SS"}, // 19
@@ -96,8 +96,7 @@ public class Shoe {
 
     public double getRoundResults()
     {
-        int initialBet = getBet();
-        ArrayList<Hand> playerHandList = runRound(initialBet);
+        ArrayList<Hand> playerHandList = runRound(getBetForHand());
 
         double winnings = 0;
 
@@ -121,25 +120,29 @@ public class Shoe {
             {
                 winnings -= hand.getBet();
             }
+            else if (hand.isSurrendered())
+            {
+                winnings -= (hand.getBet() * 0.5);
+            }
             else
             {
                 while(dealerHand.getHandTotal() < 17 || (dealerHand.getHandTotal() < 18 && dealerHand.isSoft())) //hard 17 or soft or hard 18+
                 {
                     dealerHand.drawToHand(drawFromShoe());
                     System.out.println(dealerHand);
+                }
 
-                    if (dealerHand.isBust())
-                    {
-                       winnings += hand.getBet();
-                    }
-                    else if (hand.getHandTotal() > dealerHand.getHandTotal())
-                    {
-                        winnings += hand.getBet();
-                    }
-                    else if(hand.getHandTotal() < dealerHand.getHandTotal())
-                    {
-                        winnings -= hand.getBet();
-                    }
+                if (dealerHand.isBust())
+                {
+                    winnings += hand.getBet();
+                }
+                else if (hand.getHandTotal() > dealerHand.getHandTotal())
+                {
+                    winnings += hand.getBet();
+                }
+                else if (hand.getHandTotal() < dealerHand.getHandTotal())
+                {
+                    winnings -= hand.getBet();
                 }
             }
         }
@@ -166,7 +169,7 @@ public class Shoe {
         Hand playerHand = new Hand(ph, bet);
 
         ArrayList<String> dh = new ArrayList<>();
-        Hand dealerHand = new Hand(dh, 0); //bet for this doesn't matter 0 is a placeholder, dealerhand is always og hand
+        Hand dealerHand = new Hand(dh, 11); //bet for this doesn't matter 0 is a placeholder
 
         for (int i = 0; i < 2; i++) //populate hands
         {
@@ -318,6 +321,8 @@ public class Shoe {
                     break;
             }
             System.out.println(playerHand);
+            System.out.println(playerHand.getHandTotal());
+            System.out.println(playerHand.getBet());
         }
         handList.add(dealerHand);
         return handList;
@@ -352,7 +357,7 @@ public class Shoe {
         shuffleFlag = false;
     }
 
-    public int getBet()
+    public int getBetForHand()
     {
         return 1;
     }

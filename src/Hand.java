@@ -20,7 +20,8 @@ public class Hand
             if (!card.equals("A"))
             {
                 handTotal += Integer.parseInt(card);
-            } else
+            }
+            else
             {
                 handTotal += 11;
             }
