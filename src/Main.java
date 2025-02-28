@@ -27,6 +27,12 @@ public class Main {
         System.out.print("Deck Penetration (must be a decimal that, when multiplied by the amount of cards in the shoe, results in an integer): ");
         final double DECK_PENETRATION = Double.parseDouble(s.nextLine());
 
+        System.out.print("Rounds Per Hour: ");
+        final int RPH = Integer.parseInt(s.nextLine());
+
+        System.out.print("Avg Session Length (in hours): ");
+        final double HOURS_PER_SESSION = Double.parseDouble(s.nextLine());
+
         System.out.print("Bet Spread (index 0 is bet at tc <= 1, each index following 0 corresponds to tc, at whichever count maxbet should be placed type \"maxbet\", if minbet should be placed, type \"minbet\", separate w commas): ");
         String[] betSpreadStr = s.nextLine().split(",");
         ArrayList<Integer> betSpread = new ArrayList<Integer>();
@@ -49,102 +55,24 @@ public class Main {
         Shoe shoe = new Shoe(decks, MAX_SPLITS, TABLE_MIN, TABLE_MAX, BANKROLL, DECK_PENETRATION, betSpread);
         //setting game conditions^^
 
-        ArrayList<String> h = new ArrayList<>();
-        h.add("A");
-        h.add("5");
-        Hand testHand = new Hand(h, 1);
+        double totalWinnings = 0;
+        int ruinedSessions = 0;
 
-        ArrayList<String> dh = new ArrayList<>();
-        dh.add("7"); //upcard1
-        dh.add("A");
-        Hand dealerHand = new Hand(dh, 1);
-
-        System.out.println(shoe.getRoundResults());
-        System.out.println(shoe.getRoundResults());
-        System.out.println(shoe.getRoundResults());
-
-//        System.out.println(hand.isBlackjack());
-
-
-
-//        System.out.println(Shoe.shouldDeviate(4, 0, "HH+4DH"));
-//        System.out.println(Shoe.getDeviation("HH+4DH"));
-
-
-
-//        ArrayList<String> h = new ArrayList<>();
-//        h.add("2");
-//        h.add("2");
-//        Hand hand = new Hand(h);
-//        System.out.println(hand.getHandTotal());
-//        System.out.println(hand.canBeSplit());
-//
-
-//
-//        System.out.println(shoe.getNextAction(hand, dealerHand, 0));
-
-
-//        for (int i = 0; i < 23; i++)
-//        {
-//            hand.add("A");
-//        }
-//        hand.add("10");
-//        hand.add("10");
-//        hand.add("10");
-//        hand.add("5");
-//        System.out.println(shoe.getHandTotal(hand));
-
-//        shoe.setTc(2);
-//
-//        System.out.println(shoe.getBet());
-
-//        System.out.println(shoe.getTc());
-//        for (int i = 0; i < 10; i++)
-//        {
-//            System.out.println(shoe.drawFromShoe());
-//            System.out.println(shoe.getTc());
-//        }
-//        System.out.println(shoe.toString());
-
-//
-//        //Test code to make sure strategy arrays are identical
-
-//        for(int i=0; i<splittableStrategyTable.length; i++) {
-//            for(int j=0; j<splittableStrategyTable[i].length; j++) {
-//                switch (splittableStrategyTable[i][j])
-//                {
-//                    case "H":
-//                        if (!splittableStrategyTable2[i][j].equals("HH"))
-//                        {
-//                            System.out.println("i: " + i + " j: " + j);
-//                        }
-//                        break;
-//                    case "S":
-//                        if (!splittableStrategyTable2[i][j].equals("SS"))
-//                        {
-//                            System.out.println("i: " + i + " j: " + j);
-//                        }
-//                        break;
-//                    case "P":
-//                        if (!splittableStrategyTable2[i][j].equals("PP"))
-//                        {
-//                            System.out.println("i: " + i + " j: " + j);
-//                        }
-//                        break;
-//                    case "DH":
-//                        if (!splittableStrategyTable2[i][j].equals("DH"))
-//                        {
-//                            System.out.println("i: " + i + " j: " + j);
-//                        }
-//                        break;
-//                    case "DS":
-//                        if (!splittableStrategyTable2[i][j].equals("DS"))
-//                        {
-//                            System.out.println("i: " + i + " j: " + j);
-//                        }
-//                        break;
-//                }
-//            }
-//        }
+        for(int i = 0; i < 50000; i++)
+        {
+            double realBankroll = BANKROLL;
+            for (int j = 0; j < RPH * HOURS_PER_SESSION; j++)
+            {
+                totalWinnings += shoe.getRoundResults();
+                realBankroll += shoe.getRoundResults();
+                if(realBankroll <= 0)
+                {
+                    ruinedSessions += 1;
+                    break;
+                }
+            }
+        }
+        System.out.println("Expected value: $" + totalWinnings / (50000 * HOURS_PER_SESSION) + "/hr");
+        System.out.println("Risk of Ruin: " + ruinedSessions / 500.0+ "%");
     }
 }

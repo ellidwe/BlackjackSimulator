@@ -108,19 +108,14 @@ public class Shoe {
             totalBet += hand.getBet();
         }
 
-        System.out.println(dealerHand);
-
         if(dealerHand.getHand().getFirst().equals("A") && tc >= 3)
         {
-            System.out.println("ins");
             if (dealerHand.isBlackjack())
             {
-                System.out.println("paid");
                 return 0.0;
             }
             else
             {
-                System.out.println("unpaid");
                 winnings -= totalBet * 0.5;
             }
         }
@@ -144,8 +139,6 @@ public class Shoe {
                 while(dealerHand.getHandTotal() < 17 || (dealerHand.getHandTotal() < 18 && dealerHand.isSoft())) //hard 17 or soft or hard 18+
                 {
                     dealerHand.drawToHand(drawFromShoe());
-                    System.out.println(dealerHand);
-                    System.out.println(dealerHand.getHandTotal());
                 }
 
                 if (dealerHand.isBust())
@@ -193,12 +186,8 @@ public class Shoe {
             dealerHand.drawToHand(drawFromShoe());
         }
 
-        System.out.println(playerHand);
-        System.out.println(dealerHand);
-
         while (!endAction)
         {
-            System.out.println(getNextAction(playerHand, dealerHand, splits));
             switch (getNextAction(playerHand, dealerHand, splits))
             {
                 case "HH":
@@ -302,9 +291,6 @@ public class Shoe {
                     playerHand.getHand().set(1, drawFromShoe()); //adds new card to current hand in place of second card
                     break;
             }
-            System.out.println(playerHand);
-            System.out.println(playerHand.getHandTotal());
-            System.out.println(playerHand.getBet());
         }
         handList.add(dealerHand);
         return handList;
