@@ -52,7 +52,7 @@ public class Main {
             }
         }
 
-        Shoe shoe = new Shoe(decks, MAX_SPLITS, TABLE_MIN, TABLE_MAX, BANKROLL, DECK_PENETRATION, betSpread);
+        Shoe shoe = new Shoe(decks, MAX_SPLITS, TABLE_MIN, TABLE_MAX, DECK_PENETRATION, betSpread);
         //setting game conditions^^
 
         double totalWinnings = 0;

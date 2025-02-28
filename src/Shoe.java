@@ -7,7 +7,6 @@ public class Shoe {
     private ArrayList<String> shoe = new ArrayList<String>();
     private int tableMin;
     private int tableMax;
-    private int bankroll;
     private int maxSplits;
     private int decks;
     private double deckPen;
@@ -66,7 +65,7 @@ public class Shoe {
             {"PP", "PP", "PP", "PP", "PP", "PP", "PP", "PP", "PP", "PP"}  // A,A
     };
 
-    public Shoe(int decksInShoe, int maxSplits, int tableMin, int tableMax, int bankroll, double deckPen, ArrayList<Integer> betSpread)
+    public Shoe(int decksInShoe, int maxSplits, int tableMin, int tableMax, double deckPen, ArrayList<Integer> betSpread)
     {
         decks = decksInShoe;
         for (int i = 0; i < (4 * decks); i++) //populate shoe
@@ -87,7 +86,6 @@ public class Shoe {
         }
         this.tableMin = tableMin;
         this.tableMax = tableMax;
-        this.bankroll = bankroll;
         this.deckPen = deckPen;
         this.betSpread = betSpread;
         this.maxSplits = maxSplits;
@@ -506,15 +504,6 @@ public class Shoe {
     public int getShoeRemaining()
     {
         return shoe.size();
-    }
-
-    public void setTc(double tc)
-    { //test method
-        this.tc = tc;
-    }
-
-    public double getTc() {
-        return tc;
     }
 
     public String toString()
