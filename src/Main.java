@@ -72,7 +72,8 @@ public class Main {
                 }
             }
         }
-        System.out.println("Expected value: $" + totalWinnings / (50000 * HOURS_PER_SESSION) + "/hr");
-        System.out.println("Risk of Ruin: " + ruinedSessions / 500.0+ "%");
+        System.out.print("Expected value: $" );
+        System.out.printf("%.2f/Hr %n", (totalWinnings / (HOURS_PER_SESSION * 50000)));
+        System.out.println("Risk of Ruin for a Single Session: " + ruinedSessions / 500.0+ "%");
     }
 }
